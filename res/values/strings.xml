@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Prismatic</string>
+    <string name="add_one">Add Test Item</string>
+    <string name="site_icon">Site Icon</string>
+    <string name="by_author">by %s</string>
+    <string name="feed_icon">Feed Icon</string>
+</resources>
