@@ -282,14 +282,6 @@ public class CardItemViewHolder {
         imageView.setAdjustViewBounds(false); // don't preserve aspect ratio
     }
 
-    private Bitmap getLoadingBitmap() {
-
-        // TODO: Cache this image
-        Drawable myDrawable = _context.getResources().getDrawable(R.drawable.loading);
-
-        return ((BitmapDrawable) myDrawable).getBitmap();
-
-    }
     //holder.keywordTopic1=(TextView) convertView.findViewById(R.id.keywordTopic1);
     //holder.keywordTopic2=(TextView) convertView.findViewById(R.id.keywordTopic2);
     //holder.keywordTopic3=(TextView) convertView.findViewById(R.id.keywordTopic3);
