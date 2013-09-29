@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bridgecanada.prismatic.R;
 import com.bridgecanada.prismatic.data.CardData;
@@ -106,7 +107,7 @@ public class CardAdapter extends BaseAdapter implements View.OnClickListener {
         cardArray.clear();
     }
 
-    SimpleImageLoadingListener setImageListener(final ImageView imageView) {
+    SimpleImageLoadingListener setImageListener(final ImageView imageView, final RelativeLayout imageLoadingView) {
 
         return new SimpleImageLoadingListener() {
             @Override
@@ -121,6 +122,10 @@ public class CardAdapter extends BaseAdapter implements View.OnClickListener {
 
                     } else {
                         imageView.setVisibility(View.GONE);
+                    }
+                    if (imageLoadingView !=null) {
+
+                        imageLoadingView.setVisibility(View.GONE);
                     }
                 } catch (Exception ex) {
                     // trying to fix null ptr error

@@ -1,10 +1,14 @@
 package com.bridgecanada.prismatic.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bridgecanada.prismatic.R;
 import com.bridgecanada.prismatic.data.CardData;
@@ -23,7 +27,8 @@ public class CardItemViewHolder {
     TextView feedTitle;
     TextView keywordAuthor;
     TextView keywordDate;
-
+    RelativeLayout largeLoadingImage;
+    RelativeLayout halfLoadingImage;
     ImageView recommendImage;
     TextView recommended;
     ImageView shareImage;
@@ -147,7 +152,7 @@ public class CardItemViewHolder {
             String theIcon = feedHighResImage;
             if (theIcon != null && !theIcon.equals("")) {
                 // TODO: Move this logic together with the Card Adapter
-                ImageLoader.getInstance().loadImage(theIcon, new ImageSize(30, 30), cardAdapter.setImageListener(feedIcon));
+                ImageLoader.getInstance().loadImage(theIcon, new ImageSize(30, 30), cardAdapter.setImageListener(feedIcon, null)); // null = no loading image at the moment
                 feedIcon.setOnClickListener(cardAdapter);
                 feedIcon.setTag(feedUrl);
 
@@ -207,7 +212,8 @@ public class CardItemViewHolder {
     }
 
     public void inflateImages(View convertView) {
-
+        largeLoadingImage = (RelativeLayout) convertView.findViewById(R.id.large_loading_image);
+        halfLoadingImage = (RelativeLayout) convertView.findViewById(R.id.half_loading_image);
         largeImage=(ImageView) convertView.findViewById(R.id.large_image);
         //ImageView largeImage = (ImageView) convertView.findViewById(R.id.large_image);
         halfImage=(ImageView) convertView.findViewById(R.id.half_image);
@@ -219,6 +225,8 @@ public class CardItemViewHolder {
         largeImage.setVisibility(View.GONE);
         //largeImage.setVisibility(View.GONE);
         halfImage.setVisibility(View.GONE);
+        largeLoadingImage.setVisibility(View.GONE);
+        halfLoadingImage.setVisibility(View.GONE);
 
         if (image != null) {
             //Log.w(TAG, "## IMAGE AT Position "+position +" FROM " + image.getUrl());
@@ -234,16 +242,18 @@ public class CardItemViewHolder {
 
             if (useLarge) {
                 //holder.largeImage.setVisibility(View.VISIBLE);
-                //largeImage.setVisibility(View.VISIBLE);
+                setLoadingImage(image, largeLoadingImage, largeImage, metrics);
+                //largeImage.setImageBitmap(R.drawable.logo); // default iamge
                 //ImageLoader.getInstance().displayImage(image.getUrl(), holder.largeImage);
                 //_imageLoader.displayImage(image.getUrl(), largeImage);
-                ImageLoader.getInstance().loadImage(image.getUrl(), cardAdapter.setImageListener(largeImage));
+                ImageLoader.getInstance().loadImage(image.getUrl(), cardAdapter.setImageListener(largeImage, largeLoadingImage));
 
                 return CardAdapter.IMAGE_TYPE.LARGE;
             } else {
+                setLoadingImage(image, halfLoadingImage, halfImage, metrics);
                 //holder.halfImage.setVisibility(View.VISIBLE);
                 //ImageLoader.getInstance().displayImage(image.getUrl(), holder.halfImage);
-                ImageLoader.getInstance().loadImage(image.getUrl(), cardAdapter.setImageListener(halfImage));
+                ImageLoader.getInstance().loadImage(image.getUrl(), cardAdapter.setImageListener(halfImage, halfLoadingImage));
                 return CardAdapter.IMAGE_TYPE.HALF;
             }
         }
@@ -254,6 +264,31 @@ public class CardItemViewHolder {
             //holder.halfImage.setVisibility(View.GONE);
             return CardAdapter.IMAGE_TYPE.NONE;
         }
+    }
+
+    private void setLoadingImage(Image image,
+                                 RelativeLayout loadingImage,
+                                 ImageView imageView,
+                                 DisplayMetrics metrics) {
+        imageView.setVisibility(View.GONE);
+        //imageView.setImageDrawable(_context.getResources().getDrawable(R.drawable.loading));
+        loadingImage.setVisibility(View.VISIBLE);
+        loadingImage.setMinimumHeight(image.getHeight());
+        loadingImage.setMinimumWidth(image.getWidth());
+        //imageView.setImageBitmap(getLoadingBitmap());
+        imageView.setMinimumHeight(image.getHeight());
+        //imageView.setMaxHeight(metrics.heightPixels);
+        imageView.setMinimumWidth(image.getWidth());
+        imageView.setAdjustViewBounds(false); // don't preserve aspect ratio
+    }
+
+    private Bitmap getLoadingBitmap() {
+
+        // TODO: Cache this image
+        Drawable myDrawable = _context.getResources().getDrawable(R.drawable.loading);
+
+        return ((BitmapDrawable) myDrawable).getBitmap();
+
     }
     //holder.keywordTopic1=(TextView) convertView.findViewById(R.id.keywordTopic1);
     //holder.keywordTopic2=(TextView) convertView.findViewById(R.id.keywordTopic2);

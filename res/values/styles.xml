@@ -20,8 +20,8 @@
     </style>
 
     <style name="cardListStyle">
-        <item name="android:layout_margin">3dp</item>
 
+        <item name="android:layout_margin">3dp</item>
         <item name="android:dividerHeight">0dp</item>
         <item name="android:divider">@android:color/transparent</item>
 
@@ -46,11 +46,28 @@
         <!--item name="android:textStyle">bold</item-->
         <item name="android:layout_marginBottom">5dp</item>
     </style>
-    <style name="cardMainImageStyle">
 
+    <style name="cardMainImageStyle"  >
         <item name="android:layout_marginBottom">10dp</item>
     </style>
-    <style name="cardHalfImageStyle">
+    <style name="imageLoadingProgressBackground" parent="android:Theme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="largeImageLoadingProgressBackground" parent="imageLoadingProgressBackground">
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+    <style name="halfImageLoadingProgressBackground" parent="imageLoadingProgressBackground">
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+    <style name="imageLoadingProgressIndicator" parent="@android:style/Widget.ProgressBar.Large">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+    <style name="cardHalfImageStyle" >
 
         <item name="android:layout_marginRight">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
@@ -119,6 +136,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:indeterminate">true</item>
     </style>
+
     <style name="drawerTextItem">
         <item name="android:textStyle">normal</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>

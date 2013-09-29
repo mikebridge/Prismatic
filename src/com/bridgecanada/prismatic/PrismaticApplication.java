@@ -44,7 +44,7 @@ public class PrismaticApplication extends Application {
 
         File cacheDir = StorageUtils.getCacheDirectory(this);
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-                //.showStubImage(R.drawable.bg_img_loading)
+                .showStubImage(R.drawable.logo)
                 .resetViewBeforeLoading()
                 .cacheOnDisc()
                 .build();

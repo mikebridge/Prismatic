@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.nostra13.universalimageloader</groupId>
             <artifactId>universal-image-loader</artifactId>
-            <version>1.8.4</version>
+            <version>1.8.6</version>
         </dependency>
 
         <dependency>
@@ -173,12 +173,13 @@
             <version>1.17.1</version>
         </dependency>
         -->
+        <!--
         <dependency>
             <groupId>com.novoda.imageloader</groupId>
             <artifactId>imageloader-core</artifactId>
             <version>1.5.8</version>
         </dependency>
-
+        -->
         <!-- JETTY -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
