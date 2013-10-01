@@ -64,6 +64,12 @@ public class AuthService implements IAuthService {
         ));
     }
 
+    @Override
+    public void Logoff() {
+        _cookieStore.clear();
+
+    }
+
     private Map<String, List<String>> createPostParms(String username, String password) {
 
         Map<String, List<String>> parms = new HashMap<String, List<String>>();

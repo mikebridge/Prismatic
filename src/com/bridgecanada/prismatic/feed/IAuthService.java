@@ -18,4 +18,6 @@ public interface IAuthService {
                IHttpResultCallback<String> successResultCallback,
                IHttpResultCallback<LoginFailureResult> failureResultCallback);
 
+    void Logoff();
+
 }

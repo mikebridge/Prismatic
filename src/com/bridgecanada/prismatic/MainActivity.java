@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.HandlerThread;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,12 +38,15 @@ import static com.bridgecanada.prismatic.feed.FeedCache.*;
 public class MainActivity extends RoboFragmentActivity {
 
     private final String TAG = getClass().getSimpleName();
+    private ActionBarDrawerToggle _actionBarDrawerToggle;
+
     private final int LOGIN_RESULT_ID = 1; // communicate with Login Activity
     private String _feedId = null; // the current feed id (TODO: Save state?)
     //private Next _next = null; // the next articles to retrieve (TODO: Save state?)
     private long _first = 0;
     private long _last = 0;
     private long _start = 0; // the start parameter from last feed call (TODO: Save state?)
+
 
     private IFeedStrategy _currentStrategy = null;
 
@@ -56,6 +63,7 @@ public class MainActivity extends RoboFragmentActivity {
     //@Inject DispatchServiceBase _eventDispatchService;
     @Inject IFeedCache _feedCache;
     @Inject DispatchServiceBase.IDispatchServiceBaseFactory _dispatchPaymentFactory;
+    @Inject private IAuthService _authService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,12 +97,45 @@ public class MainActivity extends RoboFragmentActivity {
         //new DrawerLayout();
         ListView drawerList = (ListView) findViewById(R.id.left_drawer);
 
-        drawerList.setAdapter(new DrawerItemAdapter(this, getMenuItems()));
+        drawerList.setAdapter(new DrawerItemAdapter(this, getDrawerMenuItems()));
 
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        SetUpDrawerToggle(drawerLayout);
+
     }
 
-    private List<DrawerItem> getMenuItems() {
+    private void SetUpDrawerToggle(DrawerLayout drawerLayout) {
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        _actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                drawerLayout,          /* DrawerLayout object */
+                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle("Closed Drawer");
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle("Opened Drawer");
+            }
+        };
+
+        // Show the updated menu icon.
+        // http://stackoverflow.com/questions/17030798/navigation-drawer-icon-not-showing-sherlock-actionbar
+        _actionBarDrawerToggle.syncState();
+
+    }
+
+    private List<DrawerItem> getDrawerMenuItems() {
         //asList("all", "shared", "recommended", "saved")
         List<DrawerItem> items = new ArrayList<DrawerItem>();
         items.add(new DrawerItem().setTitle("all").setFeedStrategy(_personalKeyStrategyProvider.create()));
@@ -160,7 +201,8 @@ public class MainActivity extends RoboFragmentActivity {
      * @param resultCode
      * @param data
      */
-    protected void onActivityResult(int requestCode, int resultCode,
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
                                     Intent data) {
         if (requestCode == LOGIN_RESULT_ID) {
             if (resultCode == RESULT_OK) {
@@ -387,6 +429,13 @@ public class MainActivity extends RoboFragmentActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
     private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         /**
@@ -413,6 +462,44 @@ public class MainActivity extends RoboFragmentActivity {
 
         }
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+
+
+        //if (_actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            //return true;
+            switch(item.getItemId()) {
+                case R.id.item_logout:
+                    LogOut();
+                    return true;
+                case R.id.item_about:
+                    showErrorMessage("Clicked About");
+                    return true;
+                case R.id.item_refresh:
+                    Reload();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        //}
+        // Handle other action bar items...
+        //return super.onOptionsItemSelected(item);
+    }
+
+    private void LogOut() {
+        _authService.Logoff();
+        this.recreate();
+    }
+
+    private void Reload() {
+        this.recreate();
+    }
+
+
 
     private IHttpResultCallback<JsonNode>  getDispatchFailureCallback() {
         return new IHttpResultCallback<JsonNode> () {

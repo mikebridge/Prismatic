@@ -126,6 +126,33 @@ public class PersistentCookieStoreTest {
 
     }
 
+    @Test
+    public void shouldClearOldCookies() {
+
+        // Arrange
+        String newValue = "value 2";
+        Cookie cookie1 = createBasicClientCookie(_name, "value 1");
+        Cookie cookie2 = createBasicClientCookie(_name, newValue);
+        _store.addCookie(cookie1);
+        _store.addCookie(cookie2);
+
+        List<Cookie> cookies = _store.getCookies();
+        assertThat(cookies.size(), equalTo(1));    // internal
+        assertThat(cookies.get(0).getValue(), equalTo(newValue));
+
+        // Act
+        _store.clear();
+
+
+        //
+        cookies = _store.getCookies();
+        assertThat(cookies.size(), equalTo(0));    // internal
+
+
+    }
+
+
+
 
     private BasicClientCookie createBasicClientCookie(String name, String value) {
         BasicClientCookie cookie = new BasicClientCookie(name, value);

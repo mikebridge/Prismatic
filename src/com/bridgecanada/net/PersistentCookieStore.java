@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 
+import java.io.Console;
 import java.util.*;
 
 /**
@@ -46,8 +47,8 @@ public class PersistentCookieStore implements CookieStore {
         SharedPreferences.Editor editor = _sharedPreferences.edit();
         String key = getKey(cookie.getName());
         String val = CookieSerializer.serializeCookie(cookie);
-        System.out.println("COOKIE IS "+key);
-        System.out.println("VALUE IS "+val);
+        //System.out.println("COOKIE IS "+key);
+        //System.out.println("VALUE IS "+val);
         editor.putString(key, val);
         editor.apply();
 
@@ -75,8 +76,29 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public void clear() {
-        throw new RuntimeException("Not Implemented Yet.");
+        Set<String> cookieNames = getStoredCookieNames();
+        saveStoredCookieNames(new HashSet<String>()); // clear all
+        SharedPreferences.Editor editor = _sharedPreferences.edit();
+        for (String name : cookieNames) {
+            System.out.println("REMOVING "+name);
+            //removeCookie(name);
+            editor.remove(name);
+        }
+
+        editor.apply();
     }
+
+//    private void removeCookie(String key) {
+//
+//        SharedPreferences.Editor editor = _sharedPreferences.edit();
+//        //String key = getKey(name);
+//
+//        //System.out.println("COOKIE IS "+key);
+//        //System.out.println("VALUE IS "+val);
+//        editor.remove(key);
+//        editor.apply();
+//
+//    }
 
 //    public boolean clearExpired(Date date) {
 //        return false;  //To change body of implemented methods use File | Settings | File Templates.
@@ -111,6 +133,8 @@ public class PersistentCookieStore implements CookieStore {
         editor.apply();
     }
 
+    /// You add a NAME here (e.g. MyCookie) but remove a KEY with remove
+    // e.g. (PrismaticAndroid_MyCookie)
     private void addStoredCookieNameToIndex(String name) {
 
         // TODO: this isn't thread-safe.
@@ -121,6 +145,23 @@ public class PersistentCookieStore implements CookieStore {
 
         saveStoredCookieNames(storedNames);
     }
+
+//    private void removeStoredCookieKeyFromIndex(String key) {
+//
+//        // TODO: this isn't thread-safe.
+//
+//        Set<String> storedNames = getStoredCookieNames();
+//        for (String k: storedNames) {
+//            System.out.println("STOREDNAMES: "+k);
+//
+//        }
+//        System.out.println("REMOVING "+key);
+//        storedNames.remove(key);
+//
+//        saveStoredCookieNames(storedNames);
+//    }
+
+
 
     private String getKey(String name) {
         return  COOKIE_NAMES + "_" + name;

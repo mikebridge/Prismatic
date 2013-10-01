@@ -61,7 +61,6 @@ public class LoginActivity extends RoboActivity {
                         password,
                         createLoginSuccessCallback(),
                         createLoginFailureCallback()
-
                 );
             }
 

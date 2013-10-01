@@ -5,4 +5,6 @@
     <string name="site_icon">Site Icon</string>
     <string name="by_author">by %s</string>
     <string name="feed_icon">Feed Icon</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

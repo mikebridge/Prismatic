@@ -190,6 +190,31 @@ public class AuthServiceTest {
 
     }
 
+    @Test
+    public void shouldUnsetCookiesOnLogoff() throws Exception {
+        // Arrange
+        _service.Login(
+                TestAuthServlet.USERNAME,
+                TestAuthServlet.PASSWORD,
+                createSuccessLoginCallback(),
+                createFailureLoginCallback());
+        //Robolectric.getBackgroundScheduler().runOneTask();
+        await().atMost(Duration.FIVE_SECONDS).until(resultIsNotNull());
+        List<Cookie> cookies = _cookieStore.getCookies();
+        Cookie authCookie = getAuthCookie(cookies);
+        assertThat(authCookie, notNullValue()); // internal test
+
+        // Act
+        _service.Logoff();
+        cookies = _cookieStore.getCookies();
+        authCookie = getAuthCookie(cookies);
+
+        // Assert
+        assertThat(authCookie, nullValue());
+        //fail("Not Implemented yet");
+
+    }
+
 //    @Test
 //    public void shouldIncludeAuthCookieOnNextCall() {
 //

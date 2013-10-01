@@ -75,7 +75,7 @@ public class MainActivityTest {
     public void On_First_Load_Should_GetFeed_Without_Id() {
 
         // Arrange
-
+        MainActivity activity = new MainActivity();
         // Act
 
         // Assert
@@ -113,6 +113,19 @@ public class MainActivityTest {
         ShadowIntent shadowIntent = shadowOf(startedIntent);
         assertThat(shadowIntent.getComponent().getClassName(), equalTo(LoginActivity.class.getName()));
     }
+
+    @Test
+    public void Click_On_Logout_Should_Log_Off() {
+
+        // Arrange
+
+        // Act
+
+        // Assert
+        fail("Not Implemented yet");
+
+    }
+
 
 
     /**
