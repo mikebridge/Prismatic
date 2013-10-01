@@ -470,9 +470,11 @@ public class MainActivity extends RoboFragmentActivity {
         // true, then it has handled the app icon touch event
 
 
-        //if (_actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            //return true;
-            switch(item.getItemId()) {
+        if (_actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch(item.getItemId()) {
                 case R.id.item_logout:
                     LogOut();
                     return true;
@@ -484,7 +486,7 @@ public class MainActivity extends RoboFragmentActivity {
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
-            }
+        }
         //}
         // Handle other action bar items...
         //return super.onOptionsItemSelected(item);
