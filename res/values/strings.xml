@@ -7,4 +7,11 @@
     <string name="feed_icon">Feed Icon</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="close">Close</string>
+    <string-array name="test_search_data">
+        <item>Test Data One +</item>
+        <item>Test Data Two +</item>
+        <item>Test Data Three +</item>
+        <item>Test Data Four +</item>
+    </string-array>
 </resources>

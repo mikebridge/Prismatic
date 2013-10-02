@@ -6,14 +6,10 @@ import android.os.Bundle;
 import android.os.HandlerThread;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 import com.bridgecanada.net.IHttpResultCallback;
 import com.bridgecanada.prismatic.data.*;
 import com.bridgecanada.prismatic.data.PrismaticFeed;
@@ -484,13 +480,46 @@ public class MainActivity extends RoboFragmentActivity {
                 case R.id.item_refresh:
                     Reload();
                     return true;
-                default:
+                case R.id.item_search:
+                    LaunchSearch();
+                    return true;
+
+            default:
                     return super.onOptionsItemSelected(item);
         }
         //}
         // Handle other action bar items...
         //return super.onOptionsItemSelected(item);
     }
+
+    private void LaunchSearch() {
+        try {
+            LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.popup_search, (ViewGroup) findViewById(R.id.popup_element));
+
+            //DisplayMetrics metrics = getResources().getDisplayMetrics();
+            //int width = metrics.widthPixels;
+            //int height = metrics.heightPixels;
+            int width =getWindow().getAttributes().width;
+            int height =getWindow().getAttributes().height;
+            final PopupWindow searchWindow = new PopupWindow(layout, width, height, true);
+
+            searchWindow.setFocusable(true);
+
+            searchWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            ImageView btnClosePopup = (ImageView) layout.findViewById(R.id.btn_close_popup);
+            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    searchWindow.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void LogOut() {
         _authService.Logoff();
