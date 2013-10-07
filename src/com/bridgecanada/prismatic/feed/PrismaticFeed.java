@@ -1,13 +1,8 @@
 package com.bridgecanada.prismatic.feed;
 
-import android.util.Log;
 import com.bridgecanada.net.*;
-import com.bridgecanada.prismatic.data.IPersistentJsonStore;
-import com.bridgecanada.prismatic.di.ApiBaseUrlAnnotation;
 import com.bridgecanada.prismatic.di.UserAgentAnnotation;
 import com.google.inject.Inject;
-
-import java.util.Random;
 
 /**
  * Retrieve the feed, tell others.

@@ -496,6 +496,7 @@ public class MainActivity extends RoboFragmentActivity {
         try {
             LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.popup_search, (ViewGroup) findViewById(R.id.popup_element));
+            SearchView searchView =  (SearchView) findViewById(R.id.searchView);
 
             //DisplayMetrics metrics = getResources().getDisplayMetrics();
             //int width = metrics.widthPixels;
@@ -514,7 +515,21 @@ public class MainActivity extends RoboFragmentActivity {
                     searchWindow.dismiss();
                 }
             });
+            searchView.setOnQueryTextListener(
+                    new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            // Do something
+                            return true;
+                        }
 
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            // Do something
+                            return true;
+                        }
+                    }
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -32,7 +32,16 @@
             android:orientation="horizontal"
             xmlns:android="http://schemas.android.com/apk/res/android"
             >
+        <SearchView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:queryHint="Type to search"
+                android:iconifiedByDefault="false"
+                android:textSize="24dp"
+                android:textColor="#ffffff"
+                android:id="@+id/searchView"/>
         <ImageView android:id="@+id/image_search"
+                android:visibility="gone"
                 android:contentDescription="Search"
                 android:src="@drawable/ic_menu_search_holo_dark"
                 android:minHeight="40dp"
@@ -42,6 +51,7 @@
 
                 />
         <EditText
+                android:visibility="gone"
                 android:id="@+id/username"
                 android:textColor="#ffffff"
                 android:inputType="textEmailAddress"
@@ -53,6 +63,7 @@
                 >
             <requestFocus />
         </EditText>
+
     </LinearLayout>
 
     <LinearLayout
