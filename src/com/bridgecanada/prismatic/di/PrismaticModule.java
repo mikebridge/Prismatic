@@ -4,6 +4,9 @@ import com.bridgecanada.net.PersistentCookieStore;
 import com.bridgecanada.prismatic.data.IPersistentJsonStore;
 import com.bridgecanada.prismatic.data.PersistentJsonStore;
 import com.bridgecanada.prismatic.feed.*;
+import com.bridgecanada.prismatic.search.ISearcher;
+import com.bridgecanada.prismatic.search.SearchRequestQueue;
+import com.bridgecanada.prismatic.search.Searcher;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.assistedinject.FactoryProvider;
@@ -30,6 +33,8 @@ public class PrismaticModule extends AbstractModule {
         //bind(DispatchServiceBase.class).to(EventDispatchService.class);
         bind(IPersistentJsonStore.class).to(PersistentJsonStore.class);
         bind(IFeedCache.class).to(FeedCache.class);
+        bind(SearchRequestQueue.class);
+        bind(ISearcher.class).to(Searcher.class);
 
         bindConstant().annotatedWith(AuthBaseUrlAnnotation.class).to(authBaseUrl);
         bindConstant().annotatedWith(ApiBaseUrlAnnotation.class).to(apiBaseUrl);

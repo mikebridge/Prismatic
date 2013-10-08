@@ -1,5 +1,6 @@
 package com.bridgecanada.prismatic.search;
 
+import android.util.Log;
 import com.bridgecanada.net.*;
 import com.bridgecanada.prismatic.data.SearchResults;
 import com.bridgecanada.prismatic.di.ApiBaseUrlAnnotation;
@@ -75,12 +76,23 @@ public class Searcher implements ISearcher {
 
     public void AsyncSearch(String searchString) {
         //HttpAsyncClientTask<com.bridgecanada.prismatic.data.PrismaticFeed, HttpError> task = getAsyncTask();
+        if (searchString==null || searchString.trim().equals("")) {
+            sendEmptyResult(searchString);
+            return;
+        }
 
 
-        //Log.i(TAG, "PrismaticFeed from: " + url);
+        final String searchUrl = getSearchUrl(searchString);
+        Log.i(TAG, "PrismaticFeed from: " + searchUrl);
         getAsyncTask()
-                .execute(getHttpCall(getSearchUrl(searchString), getSuccessFeedCallback(searchString), getFailureFeedCallback()));
+                .execute(getHttpCall(searchUrl, getSuccessFeedCallback(searchString), getFailureFeedCallback()));
 
+    }
+
+    private void sendEmptyResult(String searchString) {
+
+
+        tellListeners(searchString, SearchResults.createEmptyResult());
     }
 
 
@@ -90,7 +102,7 @@ public class Searcher implements ISearcher {
 
             @Override
             public void onComplete(SearchResults result, String raw, int statusCode) {
-                System.out.println(TAG + ".onSuccess: " + result);
+                //System.out.println(TAG + ".onSuccess: " + result);
                 tellListeners(searchString, result);
             }
 

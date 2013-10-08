@@ -7,26 +7,13 @@
               android:layout_height="match_parent"
               android:background="#C0000000"
         >
-        <RelativeLayout
-                android:layout_marginTop="40dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/btn_close_popup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
 
-                    android:src="@drawable/ic_clear_normal"
-                    android:layout_gravity="right"
-
-                    android:layout_alignParentTop="true"/>
-        </RelativeLayout>
 
     <LinearLayout
+            android:paddingTop="10dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/search_bar"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:orientation="horizontal"
@@ -34,86 +21,111 @@
             >
         <SearchView
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:queryHint="Type to search"
                 android:iconifiedByDefault="false"
                 android:textSize="24dp"
                 android:textColor="#ffffff"
-                android:id="@+id/searchView"/>
-        <ImageView android:id="@+id/image_search"
-                android:visibility="gone"
-                android:contentDescription="Search"
-                android:src="@drawable/ic_menu_search_holo_dark"
-                android:minHeight="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-
-                />
-        <EditText
-                android:visibility="gone"
-                android:id="@+id/username"
-                android:textColor="#ffffff"
-                android:inputType="textEmailAddress"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="24dp"
-                android:hint="Type to search"
-                >
+                android:id="@+id/searchView">
             <requestFocus />
-        </EditText>
+                </SearchView>
 
+        <ImageView
+                android:id="@+id/btn_close_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/ic_clear_normal"
+                android:layout_gravity="right"
+
+                android:layout_alignParentTop="true"/>
     </LinearLayout>
-
+    <!--android:layout_marginTop="20dp"-->
     <LinearLayout
             android:id="@+id/search_titles"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_gravity="left|center_vertical">
-        <TextView android:text="People"
+        <TextView
+                android:id="@+id/peopleListTitleView"
+                android:text="People"
+                  android:layout_marginLeft="10dp"
                   android:textColor="#ffffff"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                 android:layout_weight="1"/>
 
-        <TextView android:text="Topics"
+        <TextView
+                android:id="@+id/topicListTitleView"
+                    android:text="Topics"
+                  android:layout_marginLeft="10dp"
                   android:textColor="#ffffff"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
                 />
         <TextView
+                android:id="@+id/publisherListTitleView"
                 android:textColor="#ffffff"
+                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Publishers"
                 android:layout_weight="1"/>
 
     </LinearLayout>
-    <LinearLayout  android:layout_width="fill_parent"
-                   android:layout_height="wrap_content"
-                android:orientation="vertical">
-    <TextView android:text="---connect this---"
-              android:textColor="#ffffff"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"/>
+    <LinearLayout
+            android:id="@+id/search_titles"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="left|center_vertical">
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
     </LinearLayout>
+
+
     <LinearLayout
             android:id="@+id/search_titles"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="left|center_vertical">
+        <ListView
+                android:textColor="#ffffff"
 
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/activitiesListView" android:layout_gravity="center|top"/>
         <ListView
 
 
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:id="@+id/listView" android:layout_gravity="center|top"/>
+                android:id="@+id/topicsListView" android:layout_gravity="center|top"/>
+
 
         <ListView
                 android:textColor="#ffffff"
@@ -121,14 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:id="@+id/listView" android:layout_gravity="center|top"/>
-        <ListView
-                android:textColor="#ffffff"
-
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:id="@+id/listView" android:layout_gravity="center|top"/>
+                android:id="@+id/feedListView" android:layout_gravity="center|top"/>
     </LinearLayout>
 
 </LinearLayout>

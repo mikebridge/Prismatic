@@ -1,6 +1,8 @@
 package com.bridgecanada.prismatic;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.HandlerThread;
@@ -15,9 +17,12 @@ import com.bridgecanada.prismatic.data.*;
 import com.bridgecanada.prismatic.data.PrismaticFeed;
 import com.bridgecanada.prismatic.feed.*;
 import com.bridgecanada.prismatic.queue.MessageHandler;
+import com.bridgecanada.prismatic.search.ISearchCompleteListener;
+import com.bridgecanada.prismatic.search.SearchRequestQueue;
 import com.bridgecanada.prismatic.ui.CardListFragment;
 import com.bridgecanada.prismatic.ui.DrawerItem;
 import com.bridgecanada.prismatic.ui.DrawerItemAdapter;
+import com.bridgecanada.prismatic.ui.SearchResultItemAdapter;
 import com.google.inject.Inject;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -43,7 +48,8 @@ public class MainActivity extends RoboFragmentActivity {
     private long _last = 0;
     private long _start = 0; // the start parameter from last feed call (TODO: Save state?)
 
-
+    private View popupSearchView;
+    private PopupWindow popupSearchWindow;
     private IFeedStrategy _currentStrategy = null;
 
     private HandlerThread _handlerThread;
@@ -58,6 +64,7 @@ public class MainActivity extends RoboFragmentActivity {
     //@Inject DispatchServiceBase _dispatchService;
     //@Inject DispatchServiceBase _eventDispatchService;
     @Inject IFeedCache _feedCache;
+    @Inject SearchRequestQueue _searchRequestQueue;
     @Inject DispatchServiceBase.IDispatchServiceBaseFactory _dispatchPaymentFactory;
     @Inject private IAuthService _authService;
 
@@ -76,9 +83,12 @@ public class MainActivity extends RoboFragmentActivity {
 
         setCurrentStrategy(_personalKeyStrategyProvider.create());
 
+        setUpSearchWindow();
+
         loadFeed(getCurrentStrategy());
 
     }
+
 
     // TODO: inject this
     private void createEventQueue() {
@@ -492,46 +502,99 @@ public class MainActivity extends RoboFragmentActivity {
         //return super.onOptionsItemSelected(item);
     }
 
+
+    private void setUpSearchWindow() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
+        popupSearchView = inflater.inflate(R.layout.popup_search, (ViewGroup) findViewById(R.id.popup_element));
+        int width =getWindow().getAttributes().width;
+        int height =getWindow().getAttributes().height;
+        popupSearchWindow = new PopupWindow(popupSearchView, width, height, true);
+        final SearchView searchView =  (SearchView) popupSearchView.findViewById(R.id.searchView);
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) searchView.findViewById(id);
+        textView.setTextColor(Color.WHITE);
+        ImageView btnClosePopup = (ImageView) popupSearchView.findViewById(R.id.btn_close_popup);
+        btnClosePopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupSearchWindow.dismiss();
+            }
+        });
+
+        //TextView topicTitle = (TextView) popupSearchView.findViewById(R.id.peopleListTitleView);
+        //topicTitle.setPaintFlags(topicTitle.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+
+    }
+
+
+
     private void LaunchSearch() {
         try {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.popup_search, (ViewGroup) findViewById(R.id.popup_element));
-            SearchView searchView =  (SearchView) findViewById(R.id.searchView);
 
+            // TODO: Bind these once, not during search.
+            // todo: Unbind after closing window
+            //LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
+            //View layout = inflater.inflate(R.layout.popup_search, (ViewGroup) findViewById(R.id.popup_element));
+            //layout.onFinishInflate()
+            //SearchView searchView =  (SearchView) findViewById(R.id.searchView);
+            SearchView searchView =  (SearchView) popupSearchView.findViewById(R.id.searchView);
             //DisplayMetrics metrics = getResources().getDisplayMetrics();
             //int width = metrics.widthPixels;
             //int height = metrics.heightPixels;
-            int width =getWindow().getAttributes().width;
-            int height =getWindow().getAttributes().height;
-            final PopupWindow searchWindow = new PopupWindow(layout, width, height, true);
+//            int width =getWindow().getAttributes().width;
+//            int height =getWindow().getAttributes().height;
+//            PopupWindow searchWindow = new PopupWindow(popupSearchView, width, height, true);
 
-            searchWindow.setFocusable(true);
 
-            searchWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
-            ImageView btnClosePopup = (ImageView) layout.findViewById(R.id.btn_close_popup);
-            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+            popupSearchWindow.setFocusable(true);
+
+            popupSearchWindow.showAtLocation(popupSearchView, Gravity.CENTER, 0, 0);
+
+
+
+            final ListView topicsListView = (ListView) popupSearchView.findViewById(R.id.topicsListView);
+            final ListView feedListView = (ListView) popupSearchView.findViewById(R.id.feedListView);
+            final ListView activitiesListView = (ListView) popupSearchView.findViewById(R.id.activitiesListView);
+            //addSeachResultListener
+
+            _searchRequestQueue.addSeachResultListener(new ISearchCompleteListener() {
                 @Override
-                public void onClick(View view) {
-                    searchWindow.dismiss();
+                public void HandleSearchResult(String searchString, SearchResults results) {
+                    topicsListView.setAdapter(new SearchResultItemAdapter<SearchTopic>(MainActivity.this, searchString, results.getTopics() ));
+                    activitiesListView.setAdapter(new SearchResultItemAdapter<SearchActivity>(MainActivity.this, searchString, results.getActivities() ));
+                    feedListView.setAdapter(new SearchResultItemAdapter<SearchFeed>(MainActivity.this, searchString, results.getFeeds() ));
                 }
             });
+
+            if (searchView == null ) {
+
+                showErrorMessage("SEARCHVIEW IS NULL");
+            }
+
             searchView.setOnQueryTextListener(
+
                     new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextChange(String newText) {
-                            // Do something
+                            //System.out.println("**** CHANGING TEXT");
+                            //showErrorMessage("Sending " + newText);
+                            _searchRequestQueue.Search(newText);
                             return true;
                         }
 
                         @Override
                         public boolean onQueryTextSubmit(String query) {
-                            // Do something
+                            //showErrorMessage("Sending " + query);
+                            //System.out.println("**** SENDING TEXT");
+                            _searchRequestQueue.Search(query);
                             return true;
                         }
                     }
+
             );
         } catch (Exception e) {
             e.printStackTrace();
+            //throw e;
         }
     }
 

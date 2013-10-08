@@ -4,7 +4,7 @@ package com.bridgecanada.prismatic.data;
  * User: bridge
  * Date: 06/10/13
  */
-public class SearchFeed {
+public class SearchFeed implements ISearchResultDisplay{
 
     private String img;
     private String key;
@@ -54,4 +54,10 @@ public class SearchFeed {
     public void setSource(ActivitySource source) {
         this.source = source;
     }
+
+    @Override
+    public String getDisplayText() {
+        return getTitle();
+    }
+
 }

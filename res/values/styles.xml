@@ -152,6 +152,14 @@
         <item name="android:dividerHeight">2dp</item>
         <item name="android:background">#f2f2f2</item>
     </style>
+    <style name="searchResultTextItem">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+
+    </style>
 
 
 </resources>

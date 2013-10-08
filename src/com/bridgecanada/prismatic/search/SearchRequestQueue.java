@@ -2,6 +2,9 @@ package com.bridgecanada.prismatic.search;
 
 import com.bridgecanada.prismatic.data.SearchResults;
 
+import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -12,12 +15,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class SearchRequestQueue {
 
+    List<ISearchCompleteListener> listeners = new ArrayList<ISearchCompleteListener>();
+
     private ConcurrentLinkedQueue<String> _queue = new ConcurrentLinkedQueue<String>();
 
     private boolean _searchActive = false;
 
     private ISearcher _searcher;
 
+    @Inject
     public SearchRequestQueue(ISearcher searcher) {
         if (searcher == null) {
             throw new IllegalArgumentException("searcher");
@@ -28,25 +34,33 @@ public class SearchRequestQueue {
 
     public void Search(String search) {
         _queue.add(search);
-        doNextSearchIfNotSearching(search);
+        doNextSearchIfNotSearching();
     }
 
 
-    private synchronized void doNextSearchIfNotSearching(String search) {
+    private synchronized void doNextSearchIfNotSearching() {
 
         if (_searchActive) {
             //System.out.println("doing nothing... "+ search);
             return; // do nothing
         } else {
             String nextSearch = popUntilLastElement();
-            if (search != null) {
+            if (nextSearch != null) {
                 launchSearch(nextSearch);
             }
         }
 
     }
 
+    public void addSeachResultListener(ISearchCompleteListener listener) {
+        listeners.add(listener);
+    }
 
+    private void tellListeners(String searchString, SearchResults results) {
+        for (ISearchCompleteListener listener : listeners) {
+            listener.HandleSearchResult(searchString, results);
+        }
+    }
 
 
     private void launchSearch(String searchString) {
@@ -78,6 +92,8 @@ public class SearchRequestQueue {
         @Override
         public void HandleSearchResult(String searchString, SearchResults results) {
             _searchActive = false;
+            tellListeners(searchString, results);
+            doNextSearchIfNotSearching();
         }
     }
 }

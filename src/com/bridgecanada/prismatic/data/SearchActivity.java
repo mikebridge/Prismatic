@@ -6,7 +6,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * User: bridge
  * Date: 06/10/13
  */
-public class SearchActivity {
+public class SearchActivity implements ISearchResultDisplay {
 
     private String displayKey;
     private String img;
@@ -75,4 +75,10 @@ public class SearchActivity {
     public void setKey(long key) {
         this.key = key;
     }
+
+    @Override
+    public String getDisplayText() {
+        return getTitle();
+    }
+
 }

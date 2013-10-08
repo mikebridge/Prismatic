@@ -3,6 +3,7 @@ package com.bridgecanada.prismatic.data;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: bridge
@@ -47,5 +48,13 @@ public class SearchResults {
     }
 
 
+    public static SearchResults createEmptyResult() {
 
+        SearchResults searchResults = new SearchResults();
+        searchResults.setTopics(new ArrayList<SearchTopic>());
+        searchResults.setActivities(new ArrayList<SearchActivity>());
+        searchResults.setFeeds(new ArrayList<SearchFeed>());
+        return searchResults;
+    }
 }
+

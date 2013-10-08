@@ -3,7 +3,7 @@ package com.bridgecanada.prismatic.data;
 /**
  * User: bridge
  */
-public class SearchTopic {
+public class SearchTopic implements ISearchResultDisplay {
 
     private String key;
     private String type;
@@ -31,5 +31,10 @@ public class SearchTopic {
 
     public void setSource(ActivitySource source) {
         this.source = source;
+    }
+
+    @Override
+    public String getDisplayText() {
+        return getKey();
     }
 }
